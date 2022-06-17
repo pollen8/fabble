@@ -8,12 +8,12 @@ export const SettingsPanel = () => {
     const [currentNodeId] = state.events.selected;
     let selected;
 
-    if ( currentNodeId ) {
+    if (currentNodeId) {
       selected = {
         id: currentNodeId,
         name: state.nodes[currentNodeId].data.name,
         settings: state.nodes[currentNodeId].related && state.nodes[currentNodeId].related.settings,
-        isDeletable: query.node(currentNodeId).isDeletable(), 
+        isDeletable: query.node(currentNodeId).isDeletable(),
       };
     }
 
@@ -21,24 +21,24 @@ export const SettingsPanel = () => {
       selected
     }
   });
-
-  return selected ? (    
+  console.log('selected', selected);
+  return selected ? (
     <div>
-    
-              <p>Selected</p>
-              {selected.name}
-          
-        { 
-          selected.settings && React.createElement(selected.settings)
-        }
-        <Button
-                      onClick={() => {
-                        actions.delete(selected.id);
-                      }}
-        >
-          Delete
-        </Button>
-    
+
+      <p>Selected</p>
+      {selected.name}
+
+      {
+        selected.settings && React.createElement(selected.settings)
+      }
+      <Button
+        onClick={() => {
+          actions.delete(selected.id);
+        }}
+      >
+        Delete
+      </Button>
+
     </div>
   ) : null
 }
