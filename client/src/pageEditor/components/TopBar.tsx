@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useEditor } from '@craftjs/core';
 
-import { useFabbleMachine } from '../App';
+import { useFabbleMachine } from '../../App';
 import { LoadPageModal } from './LoadPage.modal';
 
 export const Topbar = () => {
@@ -28,6 +28,7 @@ export const Topbar = () => {
             onChange={(e) => actions.setOptions(options => options.enabled = e.target.checked)}
           /> Enable
         </label>
+
         <Button
           onClick={() => {
             service.send('OPEN_LOAD');

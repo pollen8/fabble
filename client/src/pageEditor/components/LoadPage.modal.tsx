@@ -15,7 +15,7 @@ import {
 import { useEditor } from '@craftjs/core';
 import { useSelector } from '@xstate/react';
 
-import { useFabbleMachine } from '../App';
+import { useFabbleMachine } from '../../App';
 
 export const LoadPageModal = () => {
   const { service } = useFabbleMachine();

@@ -14,7 +14,7 @@ import { Text } from './Text';
 export const CardTop: UserComponent<{}> = ({
   children,
 }) => {
-  const { connectors: {connect} } = useNode();
+  const { connectors: { connect } } = useNode();
 
   return (
     <div ref={(ref) => ref && connect(ref)}>
@@ -33,10 +33,10 @@ CardTop.craft = {
   } as Partial<NodeRules>
 }
 
-export const CardBottom: UserComponent<{}> = ({children}) => {
-  const { connectors: {connect} } = useNode();
+export const CardBottom: UserComponent<{}> = ({ children }) => {
+  const { connectors: { connect } } = useNode();
   return (
-     <div ref={(ref) => ref && connect(ref)}>
+    <div ref={(ref) => ref && connect(ref)}>
       {children}
     </div>
   )
@@ -45,22 +45,22 @@ export const CardBottom: UserComponent<{}> = ({children}) => {
 CardBottom.craft = {
   rules: {
     // Only accept Buttons
-    canMoveIn : (incomingNodes) => incomingNodes.every(incomingNode => incomingNode.data.type === Button)
- 
+    canMoveIn: (incomingNodes) => incomingNodes.every(incomingNode => incomingNode.data.type === Button)
+
   } as Partial<NodeRules>
 }
 export const Card: FC = () => {
-  const { connectors: {connect, drag} } = useNode();
+  const { connectors: { connect, drag } } = useNode();
 
   return (
     <Container>
-    <Element is={CardTop} id="text" canvas> 
-      <Text text="Title" />
-      <Text text="Subtitle" />
-    </Element>
-    <Element is={CardBottom} id="buttons" canvas>  
-      <Button size="sm" text="Learn more" />
-    </Element>
-  </Container>
+      <Element is={CardTop} id="text" canvas>
+        <Text text="Title" />
+        <Text text="Subtitle" />
+      </Element>
+      <Element is={CardBottom} id="buttons" canvas>
+        <Button size="sm" text="Learn more" />
+      </Element>
+    </Container>
   )
 }
