@@ -20,13 +20,13 @@ import { useFabbleMachine } from '../../App';
 export const LoadPageModal = () => {
   const { service } = useFabbleMachine();
   const { actions } = useEditor();
-  const isOpen = useSelector(service, (state) => state.matches('pageEditor.load'))
+  const isOpen = useSelector(service, (state) => state.matches('pageEditor.load'));
   const onClose = () => service.send('CANCEL');
   const onLoad = () => {
     service.send({ type: 'LOAD', data: { page } });
     const json = lz.decompress(lz.decodeBase64(page));
     actions.deserialize(json);
-  }
+  };
   const [page, setPage] = useState('');
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -47,5 +47,5 @@ export const LoadPageModal = () => {
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};

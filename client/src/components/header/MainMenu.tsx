@@ -1,7 +1,10 @@
-import { send } from 'xstate/lib/actions';
+import React from 'react';
 
 import {
+  Box,
   Button,
+  Flex,
+  Heading,
   Stack,
 } from '@chakra-ui/react';
 import { useSelector } from '@xstate/react';
@@ -13,6 +16,10 @@ export const MainMenu = () => {
   const {service, send} = useFabbleMachine();
   const isLoggedIn = useSelector(service, (state) => state.matches('authenticated'))
   return (
+    <Flex padding="5">
+      <Box flex="1">
+      <Heading as="h1">Fabble</Heading >
+      </Box>
     <Stack
       spacing={8}
       align="center"
@@ -33,7 +40,6 @@ export const MainMenu = () => {
         </MenuItem>
         </>
       }
-      
       {
       !isLoggedIn && 
       <MenuItem to={{type: 'TO_SIGN_IN'}} slug="sign-in">
@@ -50,5 +56,6 @@ export const MainMenu = () => {
 }
       
     </Stack>
+    </Flex>
   )
 }

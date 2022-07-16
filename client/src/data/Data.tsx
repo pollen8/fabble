@@ -24,14 +24,17 @@ export const Data = () => {
         name
         source (openAPI json file)
 
-        A test mesh example can be found here https://codesandbox.io/s/github/Urigo/graphql-mesh/tree/master/examples/openapi-javascript-wiki?file=/example-queries/wikipedia-metrics.graphql:0-272
+        A test mesh example can be found here
+         https://codesandbox.io/s/github/Urigo/graphql-mesh/tree/master/examples/openapi-javascript-wiki?file=/example-queries/wikipedia-metrics.graphql:0-272
 
         Need to work out where the mesh.rc file will be stored
       </p>
       <h1>Queries</h1>
-      <p>Once we have a data connector defined we can CRUD queries, the out put of queries can be used to display data in the app's pages.
-        For PC lets go with a simple textarea, submit button and json preview of results. OR maybe we can find an off the shelf graph QL UI
+      <p>Once we have a data connector defined we
+        can CRUD queries, the out put of queries can be used to display data in the app's pages.
+        For PC lets go with a simple textarea, submit button
+        and json preview of results. OR maybe we can find an off the shelf graph QL UI
       </p>
     </>
-  )
-}
+  );
+};

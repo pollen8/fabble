@@ -14,5 +14,5 @@ export const Composer = () => {
       <h1>Composer</h1>
       <p>this will be a drag and drop UI for building page interactions via a state machines</p>
     </>
-  )
-}
+  );
+};

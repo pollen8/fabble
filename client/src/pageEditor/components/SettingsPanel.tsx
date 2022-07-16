@@ -18,8 +18,8 @@ export const SettingsPanel = () => {
     }
 
     return {
-      selected
-    }
+      selected,
+    };
   });
   console.log('selected', selected);
   return selected ? (
@@ -40,5 +40,5 @@ export const SettingsPanel = () => {
       </Button>
 
     </div>
-  ) : null
-}
+  ) : null;
+};

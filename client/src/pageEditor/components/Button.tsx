@@ -1,5 +1,3 @@
-import { FC } from 'react';
-
 import {
   Button as UIButton,
   ButtonProps,
@@ -14,7 +12,7 @@ import {
 } from '@craftjs/core';
 
 type Props = {
-  size?: ButtonProps["size"],
+  size?: ButtonProps['size'],
   text: string;
 }
 
@@ -27,10 +25,10 @@ export const Button: UserComponent<Props> = ({
   return (
     <UIButton
       size={size}
-      ref={ref => ref && connect(drag(ref))}
+      ref={(ref) => ref && connect(drag(ref))}
     >{text}</UIButton>
-  )
-}
+  );
+};
 
 
 const ButtonSettings = () => {
@@ -64,14 +62,14 @@ const ButtonSettings = () => {
           onChange={(e) => setProp((props: Props) => props.text = e.target.value)} />
       </FormControl>
     </>
-  )
-}
+  );
+};
 
 Button.craft = {
   props: {
     size: 'md',
   },
   related: {
-    settings: ButtonSettings
-  }
-}
+    settings: ButtonSettings,
+  },
+};

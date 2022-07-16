@@ -14,18 +14,18 @@ import { LoadPageModal } from './LoadPage.modal';
 
 export const Topbar = () => {
   const { actions, query, enabled } = useEditor((state) => ({
-    enabled: state.options.enabled
+    enabled: state.options.enabled,
   }));
   const { service } = useFabbleMachine();
   console.log(service.state?.value);
-  const toast = useToast()
+  const toast = useToast();
   return (
     <>
       <Box padding={4}>
         <label>
           <input type="checkbox"
             defaultChecked={true}
-            onChange={(e) => actions.setOptions(options => options.enabled = e.target.checked)}
+            onChange={(e) => actions.setOptions((options) => options.enabled = e.target.checked)}
           /> Enable
         </label>
 
@@ -38,7 +38,7 @@ export const Topbar = () => {
         </Button>
         <Button
           onClick={() => {
-            service.send('OPEN_SAVE_AS')
+            service.send('OPEN_SAVE_AS');
           }}
         >
           Save As
@@ -52,7 +52,7 @@ export const Topbar = () => {
               status: 'success',
               duration: 5000,
               isClosable: true,
-            })
+            });
           }}>
           Save
         </Button>
@@ -60,5 +60,5 @@ export const Topbar = () => {
       </Box>
       <LoadPageModal />
     </>
-  )
+  );
 };

@@ -27,7 +27,7 @@ import { supabase } from './supabaseClient';
 
 type MachineContext = {
   service: Service;
-  send: Service["send"];
+  send: Service['send'];
 };
 export const FabbleMachineContext = createContext({} as MachineContext);
 
@@ -40,8 +40,8 @@ const App = () => {
     setSession(supabase?.auth?.session() ?? undefined);
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("on auth change", session);
-      service.send({ type: "SET_SESSION", session });
+      console.log('on auth change', session);
+      service.send({ type: 'SET_SESSION', session });
       setSession(session ?? undefined);
     });
   }, []);
@@ -51,16 +51,16 @@ const App = () => {
       session,
     },
     services: {
-      loadPage: async () => ({ page: "" }),
-      signOut: async () =>  {
+      loadPage: async () => ({ page: '' }),
+      signOut: async () => {
         await supabase.auth.signOut();
       },
       signIn: async () => {
         const { user, session, error } = await supabase.auth.signIn({
-          provider: "google",
+          provider: 'google',
         });
         if (!user || !session) {
-          throw new Error("no user found");
+          throw new Error('no user found');
         }
         if (error) {
           throw new Error(error.message);
@@ -69,12 +69,12 @@ const App = () => {
       },
       getProfile: async () => {
         const user = supabase.auth.user();
-        console.log("get profile user", user);
-        let { data, error, status } = await supabase
-          .from("profiles")
-          .select(`username, website, avatar_url`)
-          .eq("id", user?.id)
-          .single();
+        console.log('get profile user', user);
+        const { data, error, status } = await supabase
+            .from('profiles')
+            .select(`username, website, avatar_url`)
+            .eq('id', user?.id)
+            .single();
 
         return data;
         // if (error && status !== 406) {
@@ -96,8 +96,8 @@ const App = () => {
           updated_at: new Date(),
         };
 
-        let { error } = await supabase.from("profiles").upsert(updates, {
-          returning: "minimal", // Don't return the value after inserting
+        const { error } = await supabase.from('profiles').upsert(updates, {
+          returning: 'minimal', // Don't return the value after inserting
         });
         return true;
       },
@@ -105,7 +105,7 @@ const App = () => {
   });
   console.log(service);
   const profile = useSelector(service, (s) => s.context.profile);
-  console.log("propfile", profile);
+  console.log('propfile', profile);
   return (
     <FabbleMachineContext.Provider value={{ service, send: service.send }}>
       <MainMenu />

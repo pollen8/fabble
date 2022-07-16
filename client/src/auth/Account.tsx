@@ -11,18 +11,16 @@ import { useFabbleMachine } from '../App';
 import { supabase } from '../supabaseClient';
 
 export const Account: FC = () => {
-
-
-  const {service} = useFabbleMachine();
+  const { service } = useFabbleMachine();
   const isAccount = useSelector(service, (state) => state.matches('profile.account'));
   const session = useSelector(service, (state) => state.context.session);
-  const profile = useSelector(service, ({context}) => context.profile);
+  const profile = useSelector(service, ({ context }) => context.profile);
   if (!isAccount) {
     return null;
   }
   console.log('profile', profile);
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string>();
   const [website, setWebsite] = useState<string>();
   const [avatar_url, setAvatarUrl] = useState<string>();
@@ -57,11 +55,11 @@ export const Account: FC = () => {
   // }
 
   const updateProfile = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      setLoading(true)
-      const user = supabase.auth.user()
+      setLoading(true);
+      const user = supabase.auth.user();
 
       const updates = {
         id: user?.id,
@@ -69,21 +67,21 @@ export const Account: FC = () => {
         website,
         avatar_url,
         updated_at: new Date(),
-      }
+      };
 
-      let {error} = await supabase.from('profiles').upsert(updates, {
+      const { error } = await supabase.from('profiles').upsert(updates, {
         returning: 'minimal', // Don't return the value after inserting
-      })
+      });
 
       if (error) {
-        throw error
+        throw error;
       }
     } catch (error: any) {
-      alert(error.message)
+      alert(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div aria-live="polite">
@@ -121,5 +119,5 @@ export const Account: FC = () => {
         Sign Out
       </button>
     </div>
-  )
-}
+  );
+};

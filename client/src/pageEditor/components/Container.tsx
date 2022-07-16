@@ -6,12 +6,12 @@ type Props = {
   padding?: number;
 }
 
-export const Container: FC<Props> =({ 
+export const Container: FC<Props> =({
   children,
-padding = 1,
- }) => {
+  padding = 1,
+}) => {
   return (
     <Element is="div" id="container" canvas
-    style={{border: '1px solid', margin: '1rem', padding: `${padding}rem`}}>{children}</Element>
-  )
-}
+      style={{ border: '1px solid', margin: '1rem', padding: `${padding}rem` }}>{children}</Element>
+  );
+};

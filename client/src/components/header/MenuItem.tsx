@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import {
   Event,
   SingleOrArray,
@@ -6,7 +6,6 @@ import {
 
 import {
   Button,
-  Link,
   Text,
 } from '@chakra-ui/react';
 
@@ -21,15 +20,14 @@ type Props = {
 
 export const MenuItem: FC<Props> = ({ children, isLast, slug, to, ...rest }) => {
   const { service } = useFabbleMachine();
-
   return (
     <Button onClick={() => {
-      history.pushState({}, '', slug)
+      window.history.pushState({}, '', slug);
       service.send(to);
     }}>
-      <Text display="block" {...rest}>
+      <Text display="inline" {...rest}>
         {children}
       </Text>
     </Button>
-  )
-}
+  );
+};

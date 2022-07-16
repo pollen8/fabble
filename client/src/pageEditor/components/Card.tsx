@@ -20,18 +20,18 @@ export const CardTop: UserComponent<{}> = ({
     <div ref={(ref) => ref && connect(ref)}>
       {children}
     </div>
-  )
-}
+  );
+};
 
 CardTop.craft = {
   rules: {
     // Only accept Text
     canMoveIn: (incomingNodes) => {
       console.log(incomingNodes);
-      return incomingNodes.every(incomingNode => incomingNode.data.type === Text)
-    }
-  } as Partial<NodeRules>
-}
+      return incomingNodes.every((incomingNode) => incomingNode.data.type === Text);
+    },
+  } as Partial<NodeRules>,
+};
 
 export const CardBottom: UserComponent<{}> = ({ children }) => {
   const { connectors: { connect } } = useNode();
@@ -39,16 +39,16 @@ export const CardBottom: UserComponent<{}> = ({ children }) => {
     <div ref={(ref) => ref && connect(ref)}>
       {children}
     </div>
-  )
-}
+  );
+};
 
 CardBottom.craft = {
   rules: {
     // Only accept Buttons
-    canMoveIn: (incomingNodes) => incomingNodes.every(incomingNode => incomingNode.data.type === Button)
+    canMoveIn: (incomingNodes) => incomingNodes.every((incomingNode) => incomingNode.data.type === Button),
 
-  } as Partial<NodeRules>
-}
+  } as Partial<NodeRules>,
+};
 export const Card: FC = () => {
   const { connectors: { connect, drag } } = useNode();
 
@@ -62,5 +62,5 @@ export const Card: FC = () => {
         <Button size="sm" text="Learn more" />
       </Element>
     </Container>
-  )
-}
+  );
+};

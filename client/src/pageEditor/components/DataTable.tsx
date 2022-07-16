@@ -1,5 +1,3 @@
-import { FC } from 'react';
-
 import {
   Alert,
   Select,
@@ -31,12 +29,12 @@ export const DataTable: UserComponent<Props> = ({
 }) => {
   const { connectors: { connect, drag } } = useNode();
   if (data.length === 0) {
-    return <Alert>No data</Alert>
+    return <Alert>No data</Alert>;
   }
   const headings = Object.keys(data[0]);
   return (
     <TableContainer
-      ref={ref => ref && connect(drag(ref))}>
+      ref={(ref) => ref && connect(drag(ref))}>
       <Table variant='simple'>
         {
           caption &&
@@ -60,14 +58,13 @@ export const DataTable: UserComponent<Props> = ({
         </Tbody>
       </Table>
     </TableContainer>
-  )
-}
-
+  );
+};
 
 
 const DataTableSettings = () => {
   const { actions: { setProp }, source } = useNode((node) => ({
-    source: node.data.props.source
+    source: node.data.props.source,
   }));
 
   return (
@@ -84,14 +81,14 @@ const DataTableSettings = () => {
         <option value="shopify:customers">Shopify: customers</option>
       </Select>
     </>
-  )
-}
+  );
+};
 
 DataTable.craft = {
   props: {
     source: 'infosum:datasets',
   },
   related: {
-    settings: DataTableSettings
-  }
-}
+    settings: DataTableSettings,
+  },
+};
