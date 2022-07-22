@@ -5,6 +5,14 @@ import React, {
 import ContentEditable from 'react-contenteditable';
 
 import {
+  FormLabel,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+} from '@chakra-ui/react';
+import {
   useNode,
   UserComponent,
 } from '@craftjs/core';
@@ -50,16 +58,22 @@ const TextSettings = () => {
 
   return (
     <>
-      <label >Font size</label>
-      <input type="number"
-        value={fontSize || 7}
+      <FormLabel>Font size</FormLabel>
+      <NumberInput
         step={0.2}
         min={1}
         max={50}
+        defaultValue={fontSize || 7}
         onChange={(e) => {
-          setProp((props: any) => props.fontSize = e.target.value);
-        }}
-      />
+          setProp((props: any) => props.fontSize = e);
+        }}>
+        <NumberInputField
+        />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
     </>
   );
 };

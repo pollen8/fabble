@@ -1,6 +1,8 @@
 import {
   Box,
+  ChakraProvider,
   Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import {
   Editor,
@@ -9,7 +11,12 @@ import {
 } from '@craftjs/core';
 import { useSelector } from '@xstate/react';
 
-import { useFabbleMachine } from '../App';
+import {
+  selectAppTheme,
+  useFabbleMachine,
+} from '../App';
+import { BoxContext } from '../common/BoxContext';
+import { ThemSelector } from '../composer/ThemeSelector';
 import { Button } from './components/Button';
 import {
   Card,
@@ -25,30 +32,51 @@ import { Topbar } from './components/TopBar';
 
 export const PageEditor = () => {
   const { service } = useFabbleMachine();
-  const isPageEditor = useSelector(service, (state) => state.matches('authenticated.pageEditor'));
-
+  const isPageEditor = useSelector(service, (state) => state.matches('authenticated.editingApp.pageEditor'));
+  const theme = useSelector(service, selectAppTheme);
   if (!isPageEditor) {
     return null;
   }
   return (
-    <Editor resolver={{ Text, Card, Button, CardTop, CardBottom, Container, DataTable }}>
-      <Topbar />
-      <Grid templateColumns="1fr 300px">
-        <Box bg="gray.100" padding={8}>
-          <Frame>
-            <Element is="div" canvas>
-              <Button text="Boo" />
-              <h2>Drag me around</h2>
-              <Text text="I'm already rendered here" />
-              <Card />
-            </Element>
-          </Frame>
-        </Box>
-        <Box padding={4}>
-          <Toolbox />
-          <SettingsPanel />
-        </Box>
-      </Grid>
-    </Editor>
-  )
-}
+    <BoxContext>
+      <Editor resolver={{ Text, Card, Button, CardTop, CardBottom, Container, DataTable }}>
+        <Grid templateColumns="200px 1fr 200px"
+          rowGap={0}
+          templateRows="auto 1fr" columnGap="0.5rem" h="full">
+          <GridItem colSpan={3}>
+            <Topbar />
+          </GridItem>
+          <GridItem>
+            <Toolbox />
+          </GridItem>
+          <GridItem>
+            <Box bg="gray.500"
+              h="full"
+              id="pageEditor"
+              borderRadius={5}>
+              <ChakraProvider theme={theme} cssVarsRoot={'#pageEditor'}>
+                <Box padding={8}>
+                  <Frame>
+                    <Element is="div" canvas>
+                      <Button text="Boo" />
+                      <h2>Drag me around</h2>
+                      <Text text="I'm already rendered here" />
+                      <Card />
+                    </Element>
+                  </Frame>
+                </Box>
+              </ChakraProvider>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box padding={4}>
+              <ThemSelector />
+              <SettingsPanel />
+            </Box>
+
+          </GridItem>
+        </Grid>
+      </Editor>
+    </BoxContext>
+  );
+};

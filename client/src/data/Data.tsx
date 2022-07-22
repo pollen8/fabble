@@ -1,17 +1,18 @@
 import { useSelector } from '@xstate/react';
 
 import { useFabbleMachine } from '../App';
+import { BoxContext } from '../common/BoxContext';
 
 export const Data = () => {
   const { service } = useFabbleMachine();
-  const isData = useSelector(service, (state) => state.matches('authenticated.data'));
+  const isData = useSelector(service, (state) => state.matches('authenticated.editingApp.data'));
 
 
   if (!isData) {
     return null;
   }
   return (
-    <>
+    <BoxContext paddingTop={4}>
       <h1>data</h1>
       <p>Data connectors are things like API's, grpc web services etc.
         In GraphQL mesh we have the following https://www.graphql-mesh.com/docs/handlers/handlers-introduction
@@ -35,6 +36,6 @@ export const Data = () => {
         For PC lets go with a simple textarea, submit button
         and json preview of results. OR maybe we can find an off the shelf graph QL UI
       </p>
-    </>
+    </BoxContext>
   );
 };

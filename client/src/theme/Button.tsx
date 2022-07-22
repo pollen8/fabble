@@ -1,4 +1,4 @@
-import type { ComponentStyleConfig } from '@chakra-ui/theme'
+import type { ComponentStyleConfig } from '@chakra-ui/theme';
 
 // You can also use the more specific type for
 // a single part component: ComponentSingleStyleConfig
@@ -9,7 +9,7 @@ export const Button: ComponentStyleConfig = {
     textTransform: 'uppercase',
     borderRadius: 'base', // <-- border radius is same for all variants and sizes
     _focus: {
-      boxShadow: "0 0 4px #fff",
+      boxShadow: '0 0 4px #fff',
     },
     _focusVisible: {
 
@@ -22,7 +22,7 @@ export const Button: ComponentStyleConfig = {
       px: 4, // <-- px is short for paddingLeft and paddingRight
       py: 3, // <-- py is short for paddingTop and paddingBottom
     },
-     md: {
+    md: {
       height: 10,
       lineHeight: 10,
       fontSize: 'md',
@@ -37,7 +37,20 @@ export const Button: ComponentStyleConfig = {
       borderColor: 'purple.500',
       color: 'purple.500',
     },
+    text: {
+      bg: 'transparent',
+    },
     solid: {
+      _active: {
+        bg: 'green.300',
+      },
+      bg: 'gray.600',
+      _hover: {
+        bg: 'green.500',
+      },
+      color: 'white',
+    },
+    primary: {
       _active: {
         bg: 'green.300',
       },
@@ -46,7 +59,7 @@ export const Button: ComponentStyleConfig = {
         bg: 'green.500',
       },
       color: 'white',
-     
+
     },
   },
   // The default size and variant values
@@ -57,4 +70,4 @@ export const Button: ComponentStyleConfig = {
     ringOffsetColor: 'red.500',
     focusBorderColor: 'white.500',
   },
-}
+};

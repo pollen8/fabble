@@ -10,24 +10,37 @@ import {
   ChakraProvider,
   extendTheme,
 } from '@chakra-ui/react';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import App from './App';
 import { Button } from './theme/Button';
+import { Input } from './theme/Input';
+import { Modal } from './theme/Modal';
+import { queryClient } from './utils/queryClient';
 
 const theme = extendTheme({
   components: {
     Button,
+    Modal,
+    Input,
   },
+
   fonts: {
     heading: `'Open Sans', sans-serif`,
     body: `'Raleway', sans-serif`,
   },
   styles: {
     global: () => ({
-      html: {
+      'html': {
         fontSize: '12px',
+        height: '100%',
+
       },
-      body: {
+      '#root': {
+        height: '100%',
+      },
+      'body': {
+        height: '100%',
         bg: 'gray.700',
         color: 'whiteAlpha.800',
       },
@@ -37,8 +50,10 @@ const theme = extendTheme({
 
 
 ReactDOM.render(
-    <ChakraProvider theme={theme}>
-      <App />
-    </ChakraProvider>,
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <App />
+      </ChakraProvider>
+    </QueryClientProvider>,
     document.getElementById('root'),
 );

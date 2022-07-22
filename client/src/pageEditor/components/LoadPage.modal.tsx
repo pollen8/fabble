@@ -20,7 +20,7 @@ import { useFabbleMachine } from '../../App';
 export const LoadPageModal = () => {
   const { service } = useFabbleMachine();
   const { actions } = useEditor();
-  const isOpen = useSelector(service, (state) => state.matches('pageEditor.load'));
+  const isOpen = useSelector(service, (state) => state.matches('authenticated.pageEditor.load'));
   const onClose = () => service.send('CANCEL');
   const onLoad = () => {
     service.send({ type: 'LOAD', data: { page } });
@@ -40,7 +40,7 @@ export const LoadPageModal = () => {
         </ModalBody>
 
         <ModalFooter>
-          <Button variant='ghost' onClick={onClose}>Close</Button>
+          <Button variant='text' onClick={onClose}>Close</Button>
           <Button colorScheme='blue' mr={3} onClick={onLoad}>
             Load
           </Button>

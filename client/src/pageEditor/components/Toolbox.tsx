@@ -14,6 +14,7 @@ import {
   useEditor,
 } from '@craftjs/core';
 
+import { SideBox } from '../../common/SideBox';
 import { Button } from './Button';
 import { Card } from './Card';
 import { Container } from './Container';
@@ -28,6 +29,9 @@ const DragElement = forwardRef<HTMLDivElement, Props>(function dragElement(props
     ref={ref}
     padding={5}
     bg="gray.900"
+    _hover={{
+      bg: 'green.600',
+    }}
     marginBottom="2"
     cursor="move">
     {props.children}
@@ -39,8 +43,8 @@ export const Toolbox = () => {
 
   return (
     <Grid>
-      <Box bg="gray.800" borderRadius={5} padding={5}>
-        <Heading as="h4">Elements</Heading>
+      <SideBox>
+        <Heading size="md" as="h4">Elements</Heading>
         <small>Drag to add</small>
         <GridItem>
           <DragElement
@@ -70,7 +74,7 @@ export const Toolbox = () => {
             ref={(ref) => ref && connectors.create(ref, <DataTable />)}>
               DataTable</DragElement>
         </GridItem>
-      </Box>
+      </SideBox>
     </Grid>
   );
 };

@@ -1,7 +1,13 @@
 import React from 'react';
 
-import { Button } from '@chakra-ui/react';
+import {
+  Button,
+  Heading,
+  VStack,
+} from '@chakra-ui/react';
 import { useEditor } from '@craftjs/core';
+
+import { SideBox } from '../../common/SideBox';
 
 export const SettingsPanel = () => {
   const { selected, actions } = useEditor((state, query) => {
@@ -21,24 +27,32 @@ export const SettingsPanel = () => {
       selected,
     };
   });
-  console.log('selected', selected);
-  return selected ? (
-    <div>
-
-      <p>Selected</p>
-      {selected.name}
-
+  return (
+    <SideBox>
+      <Heading size="md" as="h4">Properties</Heading>
       {
-        selected.settings && React.createElement(selected.settings)
-      }
-      <Button
-        onClick={() => {
-          actions.delete(selected.id);
-        }}
-      >
-        Delete
-      </Button>
+        selected ?
+        <VStack
+          align="stretch"
+          spacing={5}>
 
-    </div>
-  ) : null;
+          <strong>{selected.name}</strong>
+
+          {
+            selected.settings && React.createElement(selected.settings)
+          }
+          <div>
+            <Button
+              onClick={() => {
+                actions.delete(selected.id);
+              }}
+            >
+          Delete
+            </Button>
+          </div>
+        </VStack> :
+      <p>Select a page element to edit</p>
+      }
+    </SideBox>
+  );
 };
