@@ -5,7 +5,6 @@ import {
 
 import {
   ButtonGroup,
-  Flex,
   IconButton,
   Text,
 } from '@chakra-ui/react';
@@ -15,6 +14,7 @@ import {
   selectApps,
   useFabbleMachine,
 } from '../App';
+import { ListItem } from '../common/ListItem';
 
 export const AppList = () => {
   const { service, send } = useFabbleMachine();
@@ -22,14 +22,9 @@ export const AppList = () => {
   return (
     <>
       {
-        apps.map((app) => <Flex key={app.id} m={4} ml={0} p={2}
-          style={{ cursor: 'pointer' }}
-          rounded='md'
-          _hover={{
-            bg: 'whiteAlpha.200',
-          }}
-          onClick={() => send({ type: 'LOAD_APP', app })}
-          justifyContent="space-between">
+        apps.map((app, index) => <ListItem key={app.id}
+          onClick={() => send({ type: 'LOAD_APP', index })}
+        >
           <Text fontSize="lg">{app.name}</Text>
           <ButtonGroup gap='1'>
             <IconButton
@@ -53,7 +48,7 @@ export const AppList = () => {
               }}
             />
           </ButtonGroup>
-        </Flex>)
+        </ListItem>)
       }
     </>
   );

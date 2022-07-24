@@ -11,6 +11,7 @@ import {
 } from '@supabase/supabase-js';
 
 import { TApp } from './apps/Apps';
+import { TPage } from './composer/Composer';
 
 export const fabbleMachine =
   createMachine({
@@ -18,15 +19,16 @@ export const fabbleMachine =
     schema: {
       context: {} as {
         page: string;
-        apps: TApp[],
-        activeAppId: string,
-        editingApp: Partial<TApp>,
-        appToDelete: TApp | undefined,
+        apps: TApp[];
+        activeAppIndex: number;
+        editingApp: Partial<TApp>;
+        appToDelete: TApp | undefined;
+        editingPageIndex: number;
         session: Session | null;
         profile: User;
         app: {
-          theme: Record<string, ThemeConfig>,
-        },
+          theme: Record<string, ThemeConfig>;
+        };
         error: string;
       },
       events: {} as
@@ -40,10 +42,10 @@ export const fabbleMachine =
         | { type: 'SET_SESSION'; session: Session | null }
         | { type: 'TO_ACCOUNT' }
         | { type: 'SET_APP_THEME', theme: Record<string, any> }
-        | { type: 'SAVE' }
-        | { type: 'OPEN_SAVE_AS' }
+        | { type: 'SAVE' } // deprecate?
+        | { type: 'OPEN_SAVE_AS' } // deprecate?
         | { type: 'CANCEL' }
-        | { type: 'OPEN_LOAD' }
+        | { type: 'OPEN_LOAD' } // deprecate?
         | { type: 'UPDATE_PROFILE'; profile: User }
         | { type: 'SET_PROFILE'; profile: User }
         | { type: 'LOAD'; data: { page: string } }
@@ -52,7 +54,7 @@ export const fabbleMachine =
         | { type: 'SAVE_APP', app: Partial<TApp> }
         | { type: 'SET_EDITING_APP', app: TApp }
         | { type: 'CANCEL_EDIT_APP' }
-        | { type: 'LOAD_APP', app: TApp }
+        | { type: 'LOAD_APP', index: number }
         | { type: 'UPDATE_EDITING_APP', data: Partial<TApp> }
         | { type: 'error.platform.savePage'; data: { message: string } }
         | { type: 'error.platform.loadPage'; data: { message: string } }
@@ -173,7 +175,7 @@ export const fabbleMachine =
                     target: 'confirmDelete',
                   },
                   LOAD_APP: {
-                    actions: 'setActiveAppId',
+                    actions: 'setActiveAppIndex',
                     target: '#fabble.authenticated.editingApp',
                   },
                 },
@@ -215,7 +217,26 @@ export const fabbleMachine =
           editingApp: {
             initial: 'composer',
             states: {
-              composer: {},
+              composer: {
+                initial: 'idle',
+
+                states: {
+                  idle: {
+                    on: {
+                      SAVE_APP: {
+                        actions: 'setPages',
+                        target: 'saving',
+                      },
+                    },
+                  },
+                  saving: {
+                    invoke: {
+                      src: 'saveApp',
+                      onDone: 'idle',
+                    },
+                  },
+                },
+              },
               data: {},
               pageEditor: {
                 initial: 'idle',
@@ -303,7 +324,11 @@ export const fabbleMachine =
       },
       setApps: (context, event) => context.apps = event.data.apps,
       setAppToDelete: (context, event) => context.appToDelete = event.app,
-      setActiveAppId: (context, event) => context.activeAppId = event.app.id,
+      setActiveAppIndex: (context, event) => context.activeAppIndex = event.index,
+      setPages: (context, event) => {
+        console.log('set pages', context, event);
+        context.apps[context.activeAppIndex] = event.app;
+      },
       setSession: (context, event) => context.session = event.session,
       completeSignIn: (context, event) => {
         context.profile = event.data.user;

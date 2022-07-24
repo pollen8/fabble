@@ -43,14 +43,14 @@ export const MainMenu = () => {
         {
           isEditingApp && <>
 
-            <MenuItem to={{ type: 'TO_DATA' }} matches="" slug="data">
-          Data
+            <MenuItem to={{ type: 'TO_DATA' }} matches="authenticated.editingApp.data" slug="data">
+              Data
             </MenuItem>
-            <MenuItem to={{ type: 'TO_COMPOSER' }} matches="" slug="composer">
-          Composer
+            <MenuItem to={{ type: 'TO_COMPOSER' }} matches="authenticated.editingApp.composer" slug="composer">
+              Composer
             </MenuItem>
-            <MenuItem to={{ type: 'TO_PAGE_EDITOR' }} matches="authenticated.pageEditor" slug="page-editor">
-          Page editor
+            <MenuItem to={{ type: 'TO_PAGE_EDITOR' }} matches="authenticated.editingApp.pageEditor" slug="page-editor">
+              Page editor
             </MenuItem>
           </>
         }

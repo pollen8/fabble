@@ -7,6 +7,7 @@ import { useSelector } from '@xstate/react';
 import { useFabbleMachine } from '../App';
 import { BoxContext } from '../common/BoxContext';
 import { Card } from '../common/Card';
+import { TPage } from '../composer/Composer';
 import { AppForm } from './AppForm';
 import { AppList } from './AppList';
 import { ConfirmDeleteApp } from './ConfirmDeleteApp.modal';
@@ -16,7 +17,9 @@ export type TApp = {
   user_id: string;
   name: string;
   created_at: string;
-  config: any;
+  config: {
+    pages: TPage[];
+  };
 }
 
 export const Apps = () => {

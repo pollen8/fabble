@@ -13,8 +13,9 @@ export interface Typegen0 {
     setEditingApp: "SET_EDITING_APP";
     updateEditingApp: "UPDATE_EDITING_APP";
     setAppToDelete: "OPEN_DELETE_APP";
-    setActiveAppId: "LOAD_APP";
+    setActiveAppIndex: "LOAD_APP";
     setProfile: "done.invoke.fabble.authenticated.loadAccount:invocation[0]";
+    setPages: "SAVE_APP";
     setPage: "LOAD" | "done.invoke.loadPage";
     setError: "error.platform.savePage" | "error.platform.loadPage";
   };
@@ -72,7 +73,9 @@ export interface Typegen0 {
     signIn: "done.invoke.fabble.unauthenticated.startSignIn:invocation[0]";
     loadApps: "done.invoke.fabble.authenticated.apps.loading:invocation[0]";
     deleteApp: "done.invoke.fabble.authenticated.apps.deleteApp:invocation[0]";
-    saveApp: "done.invoke.fabble.authenticated.apps.saveApp:invocation[0]";
+    saveApp:
+      | "done.invoke.fabble.authenticated.apps.saveApp:invocation[0]"
+      | "done.invoke.fabble.authenticated.editingApp.composer.saving:invocation[0]";
     signOut: "done.invoke.fabble.authenticated.signOut:invocation[0]";
     getProfile: "done.invoke.fabble.authenticated.loadAccount:invocation[0]";
     saveProfile: "done.invoke.fabble.authenticated.account.updateProfile:invocation[0]";
@@ -129,6 +132,8 @@ export interface Typegen0 {
     | "authenticated.account.updateProfile"
     | "authenticated.editingApp"
     | "authenticated.editingApp.composer"
+    | "authenticated.editingApp.composer.idle"
+    | "authenticated.editingApp.composer.saving"
     | "authenticated.editingApp.data"
     | "authenticated.editingApp.pageEditor"
     | "authenticated.editingApp.pageEditor.idle"
@@ -157,6 +162,7 @@ export interface Typegen0 {
                 | "data"
                 | "pageEditor"
                 | {
+                    composer?: "idle" | "saving";
                     pageEditor?:
                       | "idle"
                       | "save"

@@ -47,8 +47,17 @@ type S = State<C>;
 
 export const selectApps = ({ context } : S) => context.apps;
 export const selectAppToDelete = ({ context }: S) => context.appToDelete;
-export const selectActiveApp = ({ context }: S) => context.apps.find(((app) => app.id === context.activeAppId));
+export const selectActiveApp = ({ context }: S) => context.apps[context.activeAppIndex];
 
+export const selectPages = (state: S) => {
+  const app = selectActiveApp(state);
+  return app?.config?.pages ?? [];
+};
+
+export const selectActivePage = (state: S) =>{
+  const pages = selectPages(state);
+  return pages[state.context.editingPageIndex] ?? {};
+};
 export const FabbleMachineContext = createContext({} as MachineContext);
 
 export const selectAppTheme = (state: S) => {
@@ -80,6 +89,7 @@ const App = () => {
   const service = useInterpret(fabbleMachine, {
     context: {
       session,
+      editingPageIndex: 0,
       apps: [],
       editingApp: {},
       app: {
@@ -93,7 +103,7 @@ const App = () => {
           const { data, error } = await supabase
               .from<TApp>('apps')
               .select(`id, name, created_at, config`)
-              .eq('user_id', user?.id);
+              .eq('user_id', user?.id ?? '');
           if (error) {
             throw error;
           }
@@ -103,6 +113,7 @@ const App = () => {
         return { apps };
       },
       saveApp: async (context, event) => {
+        console.log('supabase save app', event.app);
         await createAppMutations.mutateAsync(event.app);
         queryClient.invalidateQueries(['apps']);
       },
