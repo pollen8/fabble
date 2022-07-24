@@ -54,18 +54,18 @@ export const PageEditor = () => {
               h="full"
               id="pageEditor"
               borderRadius={5}>
-              <ChakraProvider theme={theme} cssVarsRoot={'#pageEditor'}>
-                <Box padding={8}>
-                  <Frame>
-                    <Element is="div" canvas>
-                      <Button text="Boo" />
-                      <h2>Drag me around</h2>
-                      <Text text="I'm already rendered here" />
-                      <Card />
-                    </Element>
-                  </Frame>
-                </Box>
-              </ChakraProvider>
+              {/* <ChakraProvider theme={theme} cssVarsRoot={'#pageEditor'}> */}
+              <Box padding={8}>
+                <Frame>
+                  <Element is="div" canvas>
+                    <Button text="Boo" />
+                    <h2>Drag me around</h2>
+                    <Text text="I'm already rendered here" />
+                    <Card />
+                  </Element>
+                </Frame>
+              </Box>
+              {/* </ChakraProvider>  */}
             </Box>
           </GridItem>
           <GridItem>
