@@ -16,6 +16,7 @@ import { ThemSelector } from './ThemeSelector';
 export type TPage = {
   id?: string;
   name?: string;
+  markup: string;
 }
 
 export const Composer = () => {
@@ -33,7 +34,6 @@ export const Composer = () => {
       <p>this will be a drag and drop UI for building page interactions via a state machines</p>
       <Grid templateColumns="2fr 1fr" columnGap={2}>
         <Card>
-          <Heading as="h1" size="md">Pages</Heading>
           <PageList />
         </Card>
       </Grid>

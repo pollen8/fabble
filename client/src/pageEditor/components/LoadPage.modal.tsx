@@ -20,7 +20,7 @@ import { useFabbleMachine } from '../../App';
 export const LoadPageModal = () => {
   const { service } = useFabbleMachine();
   const { actions } = useEditor();
-  const isOpen = useSelector(service, (state) => state.matches('authenticated.pageEditor.load'));
+  const isOpen = useSelector(service, (state) => state.matches('authenticated.editingApp.pageEditor.load'));
   const onClose = () => service.send('CANCEL');
   const onLoad = () => {
     service.send({ type: 'LOAD', data: { page } });
