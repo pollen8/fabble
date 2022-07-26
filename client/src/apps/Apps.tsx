@@ -18,6 +18,8 @@ export type TApp = {
   name: string;
   created_at: string;
   config: {
+    /** graphQL mesh YAML config */
+    data: string,
     pages: TPage[];
   };
 }
@@ -27,6 +29,7 @@ export type TAppCreateDTO = {
   user_id: string;
   name: string;
   config: {
+    data: string;
     pages: TPage[];
   };
 }

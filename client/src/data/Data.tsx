@@ -1,13 +1,18 @@
 import { useSelector } from '@xstate/react';
 
-import { useFabbleMachine } from '../App';
+import {
+  selectActiveAppDataConfig,
+  useFabbleMachine,
+} from '../App';
 import { BoxContext } from '../common/BoxContext';
+import { MeshEditor } from './MeshEditor';
 
 export const Data = () => {
-  const { service } = useFabbleMachine();
+  const { service, send } = useFabbleMachine();
   const isData = useSelector(service, (state) => state.matches('authenticated.editingApp.data'));
+  const value = useSelector(service, selectActiveAppDataConfig);
 
-
+  console.log(service.getSnapshot().value);
   if (!isData) {
     return null;
   }
@@ -36,6 +41,12 @@ export const Data = () => {
         For PC lets go with a simple textarea, submit button
         and json preview of results. OR maybe we can find an off the shelf graph QL UI
       </p>
+      <MeshEditor
+        value={value}
+        onChange={(v) => {
+          send({ type: 'SET_APP_DATA_CONFIG', config: v });
+        }}
+      />
     </BoxContext>
   );
 };

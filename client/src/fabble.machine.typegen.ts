@@ -18,8 +18,9 @@ export interface Typegen0 {
     setProfile: "done.invoke.fabble.authenticated.loadAccount:invocation[0]";
     setActivePageIndex: "LOAD_PAGE";
     setPages: "SAVE_APP";
-    setActivePageMarkup: "SET_PAGE_MARKUP";
+    setAppDataConfig: "SET_APP_DATA_CONFIG";
     setError: "error.platform.savePage";
+    setActivePageMarkup: "SET_PAGE_MARKUP";
   };
   internalEvents: {
     "done.invoke.fabble.unauthenticated.startSignIn:invocation[0]": {
@@ -100,7 +101,7 @@ export interface Typegen0 {
     deleteApp: "DELETE_APP";
     saveApp: "SAVE_APP";
     saveProfile: "xstate.init";
-    savePage: "SET_PAGE_MARKUP";
+    savePage: "SET_APP_DATA_CONFIG" | "SET_PAGE_MARKUP";
   };
   eventsCausingGuards: {};
   eventsCausingDelays: {};
@@ -125,6 +126,8 @@ export interface Typegen0 {
     | "authenticated.editingApp.composer.idle"
     | "authenticated.editingApp.composer.saving"
     | "authenticated.editingApp.data"
+    | "authenticated.editingApp.data.idle"
+    | "authenticated.editingApp.data.saving"
     | "authenticated.editingApp.pageEditor"
     | "authenticated.editingApp.pageEditor.idle"
     | "authenticated.editingApp.pageEditor.saving"
@@ -150,6 +153,7 @@ export interface Typegen0 {
                 | "pageEditor"
                 | {
                     composer?: "idle" | "saving";
+                    data?: "idle" | "saving";
                     pageEditor?: "idle" | "saving";
                   };
             };

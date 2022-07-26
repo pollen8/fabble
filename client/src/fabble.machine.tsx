@@ -58,6 +58,7 @@ export const fabbleMachine =
         | { type: 'UPDATE_EDITING_APP'; key: keyof TApp, value: any }
         | { type: 'LOAD_PAGE'; index: number }
         | { type: 'SET_PAGE_MARKUP'; markup: string }
+        | { type: 'SET_APP_DATA_CONFIG', config: string }
         | { type: 'error.platform.savePage'; data: { message: string } }
         | { type: 'error.platform.loadPage'; data: { message: string } }
         | { type: 'done.invoke.loadPage'; data: { page: string } },
@@ -243,7 +244,36 @@ export const fabbleMachine =
                   },
                 },
               },
-              data: {},
+              data: {
+                initial: 'idle',
+                states: {
+                  idle: {
+                    on: {
+                      SET_APP_DATA_CONFIG: {
+                        actions: 'setAppDataConfig',
+                        target: 'saving',
+                      },
+                    },
+                  },
+                  saving: {
+                    invoke: {
+                      src: 'savePage',
+                      id: 'savePage',
+                      onDone: [
+                        {
+                          target: 'idle',
+                        },
+                      ],
+                      onError: [
+                        {
+                          actions: 'setError',
+                          target: 'idle',
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
               pageEditor: {
                 initial: 'idle',
                 states: {
@@ -284,7 +314,6 @@ export const fabbleMachine =
       updateEditingApp: (context, event) => context.editingApp ? context.editingApp[event.key] = event.value: null,
       setEditingApp: (context, event) => context.editingApp = event.app,
       clearEditingApp: (context) => {
-        console.log('clearEditingApp ', context);
         context.editingApp = undefined;
       },
       setApps: (context, event) => context.apps = event.data.apps,
@@ -293,11 +322,12 @@ export const fabbleMachine =
       setActiveAppIndex: (context, event) => context.activeAppIndex = event.index,
       setActivePageIndex: (context, event) => context.activePageIndex = event.index,
       setActivePageMarkup: (context, event) => {
-        console.log('setActivePagemarku[', event);
         context.apps[context.activeAppIndex].config.pages[context.activePageIndex].markup = event.markup;
       },
+      setAppDataConfig: (context, event) => {
+        context.apps[context.activeAppIndex].config.data = event.config;
+      },
       setPages: (context, event) => {
-        console.log('set pages', context, event);
         context.apps[context.activeAppIndex] = event.app as TApp;
       },
       setSession: (context, event) => context.session = event.session,

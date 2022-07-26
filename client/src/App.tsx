@@ -49,12 +49,18 @@ type S = State<C>;
 export const selectApps = ({ context } : S) => context.apps;
 export const selectAppToDelete = ({ context }: S) => context.appToDelete;
 export const selectActiveApp = ({ context }: S) => context.apps[context.activeAppIndex];
+export const selectActiveAppDataConfig = (state: S) => {
+  const activeApp = selectActiveApp(state);
+  if (!activeApp) {
+    return '';
+  }
+  return activeApp.config.data;
+};
 export const selectActivePageMarkup= (state : S) => {
   const activeApp = selectActiveApp(state);
   if (!activeApp) {
     return '';
   }
-  console.log('activeApp.config.pages', activeApp.config.pages, state.context.activePageIndex);
   return activeApp.config.pages[state.context.activePageIndex ?? 0].markup ?? '';
 };
 export const selectPages = (state: S) => {
