@@ -23,6 +23,7 @@ import {
 import {
   Apps,
   TApp,
+  TAppCreateDTO,
 } from './apps/Apps';
 import { Account } from './auth/Account';
 import { SignIn } from './auth/SignIn';
@@ -48,7 +49,14 @@ type S = State<C>;
 export const selectApps = ({ context } : S) => context.apps;
 export const selectAppToDelete = ({ context }: S) => context.appToDelete;
 export const selectActiveApp = ({ context }: S) => context.apps[context.activeAppIndex];
-
+export const selectActivePageMarkup= (state : S) => {
+  const activeApp = selectActiveApp(state);
+  if (!activeApp) {
+    return '';
+  }
+  console.log('activeApp.config.pages', activeApp.config.pages, state.context.activePageIndex);
+  return activeApp.config.pages[state.context.activePageIndex ?? 0].markup ?? '';
+};
 export const selectPages = (state: S) => {
   const app = selectActiveApp(state);
   return app?.config?.pages ?? [];
@@ -76,7 +84,7 @@ const App = () => {
     return data;
   });
 
-  const createAppMutations = useMutation(async (app: Partial<TApp>) => {
+  const createAppMutations = useMutation(async (app: TAppCreateDTO) => {
     const { error } = await supabase.from<TApp>('apps').upsert((app), {
       returning: 'minimal', // Don't return the value after inserting
     });
@@ -91,7 +99,7 @@ const App = () => {
       session,
       editingPageIndex: 0,
       apps: [],
-      editingApp: {},
+      editingApp: undefined,
       app: {
         theme: {},
       },
@@ -124,7 +132,6 @@ const App = () => {
         await deleteAppMutation.mutateAsync(context?.appToDelete?.id ?? '');
         queryClient.invalidateQueries(['apps']);
       },
-      loadPage: async () => ({ page: '' }),
       signOut: async () => {
         await supabase.auth.signOut();
       },
@@ -142,7 +149,6 @@ const App = () => {
       },
       getProfile: async () => {
         const user = supabase.auth.user();
-        console.log('get profile user', user);
         const { data, error } = await supabase
             .from('profiles')
             .select(`username, website, avatar_url`)
@@ -153,7 +159,9 @@ const App = () => {
         }
         return data;
       },
-      savePage: async () => {
+      savePage: async (context, event) => {
+        await createAppMutations.mutateAsync(context.apps[context.activeAppIndex]);
+        queryClient.invalidateQueries(['apps']);
         return true;
       },
       saveProfile: async (context) => {

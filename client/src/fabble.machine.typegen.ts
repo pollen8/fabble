@@ -14,10 +14,12 @@ export interface Typegen0 {
     updateEditingApp: "UPDATE_EDITING_APP";
     setAppToDelete: "OPEN_DELETE_APP";
     setActiveAppIndex: "LOAD_APP";
+    resetActivePageIndex: "LOAD_APP";
     setProfile: "done.invoke.fabble.authenticated.loadAccount:invocation[0]";
+    setActivePageIndex: "LOAD_PAGE";
     setPages: "SAVE_APP";
-    setPage: "LOAD" | "done.invoke.loadPage";
-    setError: "error.platform.savePage" | "error.platform.loadPage";
+    setActivePageMarkup: "SET_PAGE_MARKUP";
+    setError: "error.platform.savePage";
   };
   internalEvents: {
     "done.invoke.fabble.unauthenticated.startSignIn:invocation[0]": {
@@ -44,17 +46,8 @@ export interface Typegen0 {
       data: unknown;
       __tip: "See the XState TS docs to learn how to strongly type this.";
     };
-    "done.invoke.loadPage": {
-      type: "done.invoke.loadPage";
-      data: unknown;
-      __tip: "See the XState TS docs to learn how to strongly type this.";
-    };
     "error.platform.savePage": {
       type: "error.platform.savePage";
-      data: unknown;
-    };
-    "error.platform.loadPage": {
-      type: "error.platform.loadPage";
       data: unknown;
     };
     "done.invoke.fabble.authenticated.apps.deleteApp:invocation[0]": {
@@ -80,7 +73,6 @@ export interface Typegen0 {
     getProfile: "done.invoke.fabble.authenticated.loadAccount:invocation[0]";
     saveProfile: "done.invoke.fabble.authenticated.account.updateProfile:invocation[0]";
     savePage: "done.invoke.savePage";
-    loadPage: "done.invoke.loadPage";
   };
   missingImplementations: {
     actions: never;
@@ -92,8 +84,7 @@ export interface Typegen0 {
       | "deleteApp"
       | "saveApp"
       | "saveProfile"
-      | "savePage"
-      | "loadPage";
+      | "savePage";
     guards: never;
     delays: never;
   };
@@ -109,8 +100,7 @@ export interface Typegen0 {
     deleteApp: "DELETE_APP";
     saveApp: "SAVE_APP";
     saveProfile: "xstate.init";
-    savePage: "SAVE";
-    loadPage: "xstate.init";
+    savePage: "SET_PAGE_MARKUP";
   };
   eventsCausingGuards: {};
   eventsCausingDelays: {};
@@ -137,10 +127,7 @@ export interface Typegen0 {
     | "authenticated.editingApp.data"
     | "authenticated.editingApp.pageEditor"
     | "authenticated.editingApp.pageEditor.idle"
-    | "authenticated.editingApp.pageEditor.save"
-    | "authenticated.editingApp.pageEditor.load"
     | "authenticated.editingApp.pageEditor.saving"
-    | "authenticated.editingApp.pageEditor.loading"
     | {
         unauthenticated?: "idle" | "startSignIn";
         authenticated?:
@@ -163,12 +150,7 @@ export interface Typegen0 {
                 | "pageEditor"
                 | {
                     composer?: "idle" | "saving";
-                    pageEditor?:
-                      | "idle"
-                      | "save"
-                      | "load"
-                      | "saving"
-                      | "loading";
+                    pageEditor?: "idle" | "saving";
                   };
             };
       };

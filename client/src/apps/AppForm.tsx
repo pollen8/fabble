@@ -12,7 +12,7 @@ import { useSelector } from '@xstate/react';
 import { useFabbleMachine } from '../App';
 import { FormActions } from '../common/FormActions';
 import { supabase } from '../supabaseClient';
-import { TApp } from './Apps';
+import { TAppCreateDTO } from './Apps';
 
 export const AppForm = () => {
   const { service, send } = useFabbleMachine();
@@ -20,8 +20,10 @@ export const AppForm = () => {
 
   const save = async (e: FormEvent) => {
     e.preventDefault();
-    const app: Partial<TApp> = {
-      ...editingApp,
+    const app: TAppCreateDTO = {
+      id: editingApp?.id ?? '',
+      config: editingApp?.config ?? { pages: [] },
+      name: editingApp?.name ?? '',
       user_id: supabase.auth.user()?.id ?? '',
     };
     send({ type: 'SAVE_APP', app });
@@ -37,13 +39,13 @@ export const AppForm = () => {
         <Input
           id="text"
           variant="fabble"
-          value={editingApp.name ?? ''}
-          onChange={(e) => send({ type: 'UPDATE_EDITING_APP', data: { name: e.target.value } })} />
+          value={editingApp?.name ?? ''}
+          onChange={(e) => send({ type: 'UPDATE_EDITING_APP', key: 'name', value: e.target.value })} />
       </FormControl>
       <FormActions>
         <ButtonGroup>
           {
-            editingApp.id &&
+            editingApp?.id &&
                 <Button type="button"
                   onClick={() => send('CANCEL_EDIT_APP')}
                 >
@@ -52,7 +54,7 @@ export const AppForm = () => {
           }
           <Button type="submit"
             name="submit">
-            {editingApp.id ? 'Edit app' : 'Create app'}
+            {editingApp?.id ? 'Edit app' : 'Create app'}
           </Button>
         </ButtonGroup>
       </FormActions>

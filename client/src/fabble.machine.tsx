@@ -10,8 +10,10 @@ import {
   User,
 } from '@supabase/supabase-js';
 
-import { TApp } from './apps/Apps';
-import { TPage } from './composer/Composer';
+import {
+  TApp,
+  TAppCreateDTO,
+} from './apps/Apps';
 
 export const fabbleMachine =
   createMachine({
@@ -21,7 +23,8 @@ export const fabbleMachine =
         page: string;
         apps: TApp[];
         activeAppIndex: number;
-        editingApp: Partial<TApp>;
+        activePageIndex: number;
+        editingApp?: TApp;
         appToDelete: TApp | undefined;
         editingPageIndex: number;
         session: Session | null;
@@ -41,21 +44,20 @@ export const fabbleMachine =
         | { type: 'TO_SIGN_IN' }
         | { type: 'SET_SESSION'; session: Session | null }
         | { type: 'TO_ACCOUNT' }
-        | { type: 'SET_APP_THEME', theme: Record<string, any> }
-        | { type: 'SAVE' } // deprecate?
-        | { type: 'OPEN_SAVE_AS' } // deprecate?
+        | { type: 'SET_APP_THEME'; theme: Record<string, any> }
         | { type: 'CANCEL' }
-        | { type: 'OPEN_LOAD' } // deprecate?
         | { type: 'UPDATE_PROFILE'; profile: User }
         | { type: 'SET_PROFILE'; profile: User }
-        | { type: 'LOAD'; data: { page: string } }
-        | { type: 'OPEN_DELETE_APP', app: TApp }
-        | { type: 'DELETE_APP', id: string }
-        | { type: 'SAVE_APP', app: Partial<TApp> }
+        // | { type: 'LOAD'; data: { page: string } }
+        | { type: 'OPEN_DELETE_APP'; app: TApp }
+        | { type: 'DELETE_APP'; id: string }
+        | { type: 'SAVE_APP'; app: TAppCreateDTO }
         | { type: 'SET_EDITING_APP', app: TApp }
         | { type: 'CANCEL_EDIT_APP' }
-        | { type: 'LOAD_APP', index: number }
-        | { type: 'UPDATE_EDITING_APP', data: Partial<TApp> }
+        | { type: 'LOAD_APP'; index: number }
+        | { type: 'UPDATE_EDITING_APP'; key: keyof TApp, value: any }
+        | { type: 'LOAD_PAGE'; index: number }
+        | { type: 'SET_PAGE_MARKUP'; markup: string }
         | { type: 'error.platform.savePage'; data: { message: string } }
         | { type: 'error.platform.loadPage'; data: { message: string } }
         | { type: 'done.invoke.loadPage'; data: { page: string } },
@@ -175,7 +177,7 @@ export const fabbleMachine =
                     target: 'confirmDelete',
                   },
                   LOAD_APP: {
-                    actions: 'setActiveAppIndex',
+                    actions: ['setActiveAppIndex', 'resetActivePageIndex'],
                     target: '#fabble.authenticated.editingApp',
                   },
                 },
@@ -223,6 +225,10 @@ export const fabbleMachine =
                 states: {
                   idle: {
                     on: {
+                      LOAD_PAGE: {
+                        actions: 'setActivePageIndex',
+                        target: '#fabble.authenticated.editingApp.pageEditor',
+                      },
                       SAVE_APP: {
                         actions: 'setPages',
                         target: 'saving',
@@ -243,32 +249,9 @@ export const fabbleMachine =
                 states: {
                   idle: {
                     on: {
-                      OPEN_SAVE_AS: {
-                        target: 'save',
-                      },
-                      OPEN_LOAD: {
-                        target: 'load',
-                      },
-                    },
-                  },
-                  save: {
-                    on: {
-                      CANCEL: {
-                        target: 'idle',
-                      },
-                      SAVE: {
+                      SET_PAGE_MARKUP: {
+                        actions: ['setActivePageMarkup'],
                         target: 'saving',
-                      },
-                    },
-                  },
-                  load: {
-                    on: {
-                      LOAD: {
-                        target: 'idle',
-                        actions: 'setPage',
-                      },
-                      CANCEL: {
-                        target: 'idle',
                       },
                     },
                   },
@@ -289,24 +272,6 @@ export const fabbleMachine =
                       ],
                     },
                   },
-                  loading: {
-                    invoke: {
-                      src: 'loadPage',
-                      id: 'loadPage',
-                      onDone: [
-                        {
-                          actions: 'setPage',
-                          target: 'idle',
-                        },
-                      ],
-                      onError: [
-                        {
-                          actions: 'setError',
-                          target: 'idle',
-                        },
-                      ],
-                    },
-                  },
                 },
               },
             },
@@ -316,18 +281,24 @@ export const fabbleMachine =
     },
   }, {
     actions: {
-      updateEditingApp: (context, event) => context.editingApp = { ...context.editingApp, ...event.data },
+      updateEditingApp: (context, event) => context.editingApp ? context.editingApp[event.key] = event.value: null,
       setEditingApp: (context, event) => context.editingApp = event.app,
       clearEditingApp: (context) => {
         console.log('clearEditingApp ', context);
-        context.editingApp = {};
+        context.editingApp = undefined;
       },
       setApps: (context, event) => context.apps = event.data.apps,
       setAppToDelete: (context, event) => context.appToDelete = event.app,
+      resetActivePageIndex: (context) => context.activePageIndex = 0,
       setActiveAppIndex: (context, event) => context.activeAppIndex = event.index,
+      setActivePageIndex: (context, event) => context.activePageIndex = event.index,
+      setActivePageMarkup: (context, event) => {
+        console.log('setActivePagemarku[', event);
+        context.apps[context.activeAppIndex].config.pages[context.activePageIndex].markup = event.markup;
+      },
       setPages: (context, event) => {
         console.log('set pages', context, event);
-        context.apps[context.activeAppIndex] = event.app;
+        context.apps[context.activeAppIndex] = event.app as TApp;
       },
       setSession: (context, event) => context.session = event.session,
       completeSignIn: (context, event) => {
@@ -340,7 +311,6 @@ export const fabbleMachine =
         // return context.profile = event.data;
       },
       setError: (context, event) => context.error = event.data.message,
-      setPage: (context, event) => context.page = event.data.page,
       setAppTheme: (context, event) => context.app.theme = event.theme,
     },
   });

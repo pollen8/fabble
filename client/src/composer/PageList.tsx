@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   ButtonGroup,
+  Flex,
+  Heading,
   IconButton,
   Input,
   Text,
@@ -48,25 +50,30 @@ export const PageList = () => {
 
   return (
     <>
-      <IconButton
-        aria-label="Add page"
-        size="sm"
-
-        icon={<IoAddCircleOutline />}
-        onClick={() => {
-          const newPages: TEditablePage[] = [
-            {
-              id: uuidv4(),
-              editing: true,
-            },
-            ...pages,
-          ];
-          setEditingPages(newPages);
-        }}
-      />
+      <Flex alignItems="center">
+        <IconButton
+          aria-label="Add page"
+          size="sm"
+          marginRight={2}
+          icon={<IoAddCircleOutline />}
+          onClick={() => {
+            const newPages: TEditablePage[] = [
+              {
+                id: uuidv4(),
+                editing: true,
+                markup: '',
+              },
+              ...pages,
+            ];
+            setEditingPages(newPages);
+          }}
+        />
+        <Heading as="h1" size="md">Pages</Heading>
+      </Flex>
       {
         editingPages.map((page, index) => <ListItem
           key={page.id}
+          onClick={() => send({ type: 'LOAD_PAGE', index })}
           onDoubleClick={() => {
             startEditing(index);
           }}>
@@ -75,8 +82,8 @@ export const PageList = () => {
             <Input
               autoFocus
               defaultValue={page.name}
+              onClick={(e) => e.stopPropagation()}
               onKeyUp={(e) => {
-                console.log(e.code);
                 if (e.code === 'Escape') {
                   stopEditing();
                 }
@@ -93,10 +100,15 @@ export const PageList = () => {
               size="sm"
 
               icon={<IoAddCircleOutline />}
-              onClick={() => {
-                const newPages: TPage[] = [
+              onClick={(e) => {
+                e.stopPropagation();
+                const newPages: TEditablePage[] = [
                   ...pages.slice(0, index),
-                  {},
+                  {
+                    id: uuidv4(),
+                    editing: true,
+                    markup: '',
+                  },
                   ...pages.slice(index),
                 ];
                 setEditingPages(newPages);
@@ -109,9 +121,9 @@ export const PageList = () => {
                 bg: 'red.500',
               }}
               icon={<IoCloseCircleOutline />}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 const newPages = pages.filter((page, i) => i !== index);
-                // @TODO - this isn't reloading the pages
                 service.send({ type: 'SAVE_APP', app: {
                   ...app,
                   config: {

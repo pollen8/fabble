@@ -22,6 +22,15 @@ export type TApp = {
   };
 }
 
+export type TAppCreateDTO = {
+  id?: string;
+  user_id: string;
+  name: string;
+  config: {
+    pages: TPage[];
+  };
+}
+
 export const Apps = () => {
   const { service } = useFabbleMachine();
   const isApps = useSelector(service, (state) => state.matches('authenticated.apps'));
