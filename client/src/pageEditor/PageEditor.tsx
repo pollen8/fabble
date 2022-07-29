@@ -35,15 +35,12 @@ import { Topbar } from './components/TopBar';
 
 export const PageEditor = () => {
   const { service, send } = useFabbleMachine();
-  const isPageEditor = useSelector(service, (state) => state.matches('authenticated.editingApp.pageEditor'));
   const markup = useSelector(service, selectActivePageMarkup);
 
   const json = lz.decompress(lz.decodeBase64(markup));
 
   const theme = useSelector(service, selectAppTheme);
-  if (!isPageEditor) {
-    return null;
-  }
+
   return (
     <BoxContext>
       <Editor

@@ -1,3 +1,14 @@
+import {
+  FC,
+  useEffect,
+  useState,
+} from 'react';
+
+import {
+  Button,
+  Spinner,
+  useToast,
+} from '@chakra-ui/react';
 import { useSelector } from '@xstate/react';
 
 import {
@@ -5,20 +16,43 @@ import {
   useFabbleMachine,
 } from '../App';
 import { BoxContext } from '../common/BoxContext';
+import { Card } from '../common/Card';
+import { ListItem } from '../common/ListItem';
 import { MeshEditor } from './MeshEditor';
 
+type NoticeProps = {
+  isOpen: boolean;
+}
+const Notice: FC<NoticeProps> = ({
+  isOpen,
+}) => {
+  const toast = useToast();
+  if (isOpen) {
+    if (!toast.isActive('saving')) {
+      toast({ title: 'API saved', id: 'saving', duration: 2000 });
+    }
+  }
+  return null;
+};
 export const Data = () => {
   const { service, send } = useFabbleMachine();
-  const isData = useSelector(service, (state) => state.matches('authenticated.editingApp.data'));
   const value = useSelector(service, selectActiveAppDataConfig);
+  const isSaving = useSelector(service, (state) => state.matches('authenticated.editingApp.data.saving'));
+  const isSaved = useSelector(service, (state) => state.matches('authenticated.editingApp.data.saved'));
+  const [script, setScript] = useState(value);
+  useEffect(() => {
+    setScript(value);
+  }, [value]);
 
-  console.log(service.getSnapshot().value);
-  if (!isData) {
-    return null;
-  }
   return (
     <BoxContext paddingTop={4}>
+      <Notice isOpen={isSaved} />
       <h1>data</h1>
+      <Card>
+        <ListItem>
+        Primsa
+        </ListItem>
+      </Card>
       <p>Data connectors are things like API's, grpc web services etc.
         In GraphQL mesh we have the following https://www.graphql-mesh.com/docs/handlers/handlers-introduction
 
@@ -41,12 +75,23 @@ export const Data = () => {
         For PC lets go with a simple textarea, submit button
         and json preview of results. OR maybe we can find an off the shelf graph QL UI
       </p>
+      {
+
+      }
       <MeshEditor
-        value={value}
+        value={script}
         onChange={(v) => {
-          send({ type: 'SET_APP_DATA_CONFIG', config: v });
+          setScript(v);
         }}
       />
+      <Button
+        disabled={isSaving}
+        leftIcon={ isSaving ? <Spinner speed="0.65s"
+          size="sm" /> : undefined}
+        onClick={() => send({ type: 'SET_APP_DATA_CONFIG', config: script })}
+      >
+       Save
+      </Button>
     </BoxContext>
   );
 };

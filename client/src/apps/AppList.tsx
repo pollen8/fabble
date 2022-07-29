@@ -23,7 +23,10 @@ export const AppList = () => {
     <>
       {
         apps.map((app, index) => <ListItem key={app.id}
-          onClick={() => send({ type: 'LOAD_APP', index })}
+          onClick={() => {
+            window.history.pushState({}, '', '/composer');
+            send({ type: 'LOAD_APP', index });
+          }}
         >
           <Text fontSize="lg">{app.name}</Text>
           <ButtonGroup gap='1'>

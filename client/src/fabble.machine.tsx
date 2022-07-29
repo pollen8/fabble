@@ -84,8 +84,20 @@ export const fabbleMachine =
       },
     },
     id: 'fabble',
-    initial: 'unauthenticated',
+    initial: 'init',
+    on: {
+      TO_ACCOUNT: 'authenticated.loadAccount',
+      TO_APPS: 'authenticated.apps',
+      TO_COMPOSER: 'authenticated.editingApp.composer',
+      TO_DATA: 'authenticated.editingApp.data',
+      TO_PAGE_EDITOR: { target: 'authenticated.editingApp.pageEditor', actions: () => console.log('TO PGE EDITOR') },
+      SET_SESSION: {
+        actions: 'setSession',
+      },
+    },
     states: {
+      init: {
+      },
       unauthenticated: {
         initial: 'idle',
         on: {
@@ -111,12 +123,9 @@ export const fabbleMachine =
       authenticated: {
         initial: 'apps',
         on: {
+
           SIGN_OUT: 'authenticated.signOut',
-          TO_ACCOUNT: 'authenticated.loadAccount',
-          TO_APPS: 'authenticated.apps',
-          TO_COMPOSER: 'authenticated.editingApp.composer',
-          TO_DATA: 'authenticated.editingApp.data',
-          TO_PAGE_EDITOR: 'authenticated.editingApp.pageEditor',
+
           SET_APP_THEME: {
             actions: 'setAppTheme',
           },
@@ -261,7 +270,7 @@ export const fabbleMachine =
                       id: 'savePage',
                       onDone: [
                         {
-                          target: 'idle',
+                          target: 'saved',
                         },
                       ],
                       onError: [
@@ -271,6 +280,9 @@ export const fabbleMachine =
                         },
                       ],
                     },
+                  },
+                  saved: {
+                    after: { 50: 'idle' },
                   },
                 },
               },

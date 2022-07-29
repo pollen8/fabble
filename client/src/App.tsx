@@ -2,11 +2,16 @@ import './App.css';
 
 import {
   createContext,
+  FC,
   useContext,
   useEffect,
   useState,
 } from 'react';
-import { State } from 'xstate';
+import {
+  ContextFrom,
+  State,
+  StateValueFrom,
+} from 'xstate';
 
 import {
   Box,
@@ -37,13 +42,14 @@ import {
 import { PageEditor } from './pageEditor/PageEditor';
 import { supabase } from './supabaseClient';
 import { queryClient } from './utils/queryClient';
+import { transitionFromPath } from './utils/routes';
 
 type MachineContext = {
   service: Service;
   send: Service['send'];
 };
 
-type C = typeof fabbleMachine['context'];
+type C = ContextFrom<typeof fabbleMachine>;
 type S = State<C>;
 
 export const selectApps = ({ context } : S) => context.apps;
@@ -188,11 +194,12 @@ const App = () => {
     setSession(supabase?.auth?.session() ?? undefined);
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('on auth change', session);
       service.send({ type: 'SET_SESSION', session });
       setSession(session ?? undefined);
     });
   }, [service]);
+
+  service.send(transitionFromPath() as any);
 
   return (
     <FabbleMachineContext.Provider value={{ service, send: service.send }}>
@@ -201,15 +208,38 @@ const App = () => {
           <MainMenu />
         </div>
         <Box h="full">
-          <PageEditor />
-          <Data />
-          <Composer />
-          <SignIn />
-          <Account />
-          <Apps />
+          <Route match="authenticated.editingApp.pageEditor">
+            <PageEditor />
+          </Route>
+          <Route match="authenticated.editingApp.data">
+            <Data />
+          </Route>
+          <Route match="authenticated.editingApp.composer">
+            <Composer />
+          </Route>
+          <Route match="unauthenticated">
+            <SignIn />
+          </Route>
+          <Route match="authenticated.account">
+            <Account />
+          </Route>
+          <Route match="authenticated.apps">
+            <Apps />
+          </Route>
         </Box>
+
       </Flex>
     </FabbleMachineContext.Provider>
   );
 };
 export default App;
+
+const Route: FC<{ match: StateValueFrom<typeof fabbleMachine> }> = ({ children, match }) => {
+  const { service } = useFabbleMachine();
+  const matches = useSelector(service, (state) => state.matches(match));
+
+  if (!matches) {
+    return null;
+  }
+  return <>{children}</>;
+};

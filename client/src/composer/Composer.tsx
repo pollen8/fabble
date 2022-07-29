@@ -1,7 +1,4 @@
-import {
-  Grid,
-  Heading,
-} from '@chakra-ui/react';
+import { Grid } from '@chakra-ui/react';
 import { useSelector } from '@xstate/react';
 
 import {
@@ -11,7 +8,6 @@ import {
 import { BoxContext } from '../common/BoxContext';
 import { Card } from '../common/Card';
 import { PageList } from './PageList';
-import { ThemSelector } from './ThemeSelector';
 
 export type TPage = {
   id?: string;
@@ -21,12 +17,7 @@ export type TPage = {
 
 export const Composer = () => {
   const { service } = useFabbleMachine();
-  const isComposer = useSelector(service, (state) => state.matches('authenticated.editingApp.composer'));
-
   const activeApp = useSelector(service, selectActiveApp);
-  if (!isComposer) {
-    return null;
-  }
   return (
     <BoxContext paddingTop={4}>
       <h1>Composer for {activeApp?.name}</h1>

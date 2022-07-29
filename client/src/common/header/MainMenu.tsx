@@ -43,26 +43,26 @@ export const MainMenu = () => {
         {
           isEditingApp && <>
 
-            <MenuItem to={{ type: 'TO_DATA' }} matches="authenticated.editingApp.data" slug="data">
-              Data
+            <MenuItem slug="/api">
+              API
             </MenuItem>
-            <MenuItem to={{ type: 'TO_COMPOSER' }} matches="authenticated.editingApp.composer" slug="composer">
+            <MenuItem slug="/composer">
               Composer
             </MenuItem>
-            <MenuItem to={{ type: 'TO_PAGE_EDITOR' }} matches="authenticated.editingApp.pageEditor" slug="page-editor">
+            <MenuItem slug="/page-editor">
               Page editor
             </MenuItem>
           </>
         }
         {
           !isLoggedIn &&
-            <MenuItem to={{ type: 'TO_SIGN_IN' }} matches="" slug="sign-in">
+            <MenuItem slug="/sign-in">
               Sign in
             </MenuItem>
         }
         {
           isLoggedIn && <>
-            <MenuItem to={{ type: 'TO_ACCOUNT' }} matches="" slug="account">
+            <MenuItem slug="/account">
               Account
             </MenuItem>
             <Button onClick={() => send('SIGN_OUT')}>Sign out</Button>
